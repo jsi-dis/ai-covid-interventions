@@ -1,0 +1,24 @@
+title: Interventions
+description: >- 
+  Characterization of Constrained Multiobjective Optimization Problems 
+url: "https://jsi-dis.github.io" 
+baseurl: "/ai-covid-interventions"
+
+# Build settings
+remote_theme: pmarsceill/just-the-docs
+color_scheme: nice
+# search_enabled: false # Use this to disable search
+
+plugins:
+  - jekyll-feed
+  
+kramdown:
+    math-engine: katex
+
+# Exclude from processing.
+# The following items will not be processed, by default.
+exclude:
+  - .jekyll-cache/
+  - Gemfile
+  - Gemfile.lock
+  - README.md

@@ -1,0 +1,33 @@
+//
+// Colors
+//
+
+$white: #ffffff;
+$gray: #fefcf0;
+$almost-black: #222222;
+$orange: #e68310;
+
+$body-background-color: $white;
+$sidebar-color: $gray;
+$search-background-color: $white;
+$table-background-color: $white;
+$code-background-color: $gray;
+$feedback-color: darken($sidebar-color, 3%);
+
+$body-text-color: $almost-black;
+$body-heading-color: $almost-black;
+$search-result-preview-color: $almost-black;
+$nav-child-link-color: $almost-black;
+$link-color: $orange;
+$btn-primary-color: $orange;
+$base-button-color: $gray;
+
+$border-color: darken($gray, 5%);
+
+// 
+// Page width
+// 
+
+$nav-width: 284px;
+$nav-width-md: 284px;
+$content-width: calc( 100% - 284px );

@@ -1,0 +1,77 @@
+.arrow {
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 3px;
+}
+
+.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.button {
+  padding: 0px 0px;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.dropdown {
+  text-align: center;
+  cursor: pointer;
+}
+
+select {
+  /* for Firefox */
+  -moz-appearance: none;
+  
+  /* for Chrome */
+  -webkit-appearance: none;
+  height: 25px;
+  width: 35px;
+}
+
+/* For IE10 */
+select::-ms-expand {
+  display: none;
+}
+
+input[type="radio"] {
+  margin-top: 1px;
+  vertical-align: middle;
+}
+
+label{
+  font-size: 16px;
+  vertical-align: middle;
+}
+
+.on{
+  color: white;
+  background-color: #fc4d50;
+}
+
+.off{
+  color: #5c5962; 
+  background-color: #fff;
+  cursor: pointer;
+}
+
+#result {
+  min-width: 550px;
+  min-height: 560px; 
+}
+
+.nostyle {
+  color: white;
+}
+
+.features {
+  padding-top: 10px;
+}
