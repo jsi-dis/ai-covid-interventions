@@ -24,28 +24,28 @@ columns
 <tr>
 <td class="select" align="center">
 <button id="couPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="cou" onchange="changePlot()" style="width:160px;"></select>
+<select id="cou" onchange="changePlot()" style="width:300px;"></select>
 <button id="couNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 <td class="select" align="center">
 <button id="catPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="cat" onchange="changePlot()" style="width:160px;"></select>
+<select id="cat" onchange="changePlot()" style="width:100px;"></select>
 <button id="catNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 <td class="select" align="center">
 <button id="weiPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="wei" onchange="changePlot()" style="width:160px;"></select>
+<select id="wei" onchange="changePlot()" style="width:100px;"></select>
 <button id="weiNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 <td class="select" align="center">
 <button id="vizPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="viz" onchange="changePlot()" style="width:320px;"></select>
+<select id="viz" onchange="changePlot()" style="width:200px;"></select>
 <button id="vizNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 </tr>
 </table>
 
-<textarea id="test" rows="50" cols="100"></textarea>
+<!-- <textarea id="test" rows="50" cols="100"></textarea> -->
 <div id="images"></div>
 
 <script src="{{ '/assets/js/data.js' | relative_url }}"></script>
