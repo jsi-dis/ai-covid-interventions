@@ -6,7 +6,7 @@
 var selectCol = document.getElementById("col");
 var valuesCol = [];
 var contentsCol;
-for (let i = 1; i <= 10; i++) {
+for (let i = 1; i <= 11; i++) {
   valuesCol.push(i);
   contentsCol += "<option>" + i + "</option>";
 }
@@ -23,6 +23,7 @@ function addPlot(path, plotName) {
   elemA.setAttribute("class", "nostyle");
   elemImg.setAttribute("src", path + plotName);
   elemImg.setAttribute("alt", "");
+  elemImg.setAttribute("onerror", "this.onerror=null; this.style.display = 'none'")
   elemA.appendChild(elemImg);
   elemDiv.appendChild(elemA);
   document.getElementById("images").appendChild(elemDiv);

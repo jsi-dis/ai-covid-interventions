@@ -2,10 +2,10 @@
 /* Functions for the Visualizations of multiple features page */
 /**************************************************************/
 
-selectCol.options[3].selected = true;
+selectCol.options[2].selected = true;
 
 /* Url to the plots */
-plotPath = "../assets/img/plots-features-multiple/";
+plotPath = "../assets/img/plots/";
 
 /* Fill the country dropdown with values */
 var selectCou = document.getElementById("cou");
@@ -61,7 +61,7 @@ function changePlot() {
 	let chosenViz = [viz.value];
 	let textName;
 	document.getElementById("images").innerHTML = "";
-	document.getElementById("test").value = "";
+	// document.getElementById("test").value = "";
 	if (selectedNode === "couAll") {
 		chosenCou = [...valuesCou];
 		/* chosenCou = catCou[cat.value]; */
@@ -83,8 +83,8 @@ function changePlot() {
                             "category-" + chosenCat[iCat] + "_" +
                             "weights-" + chosenWei[iWei] + "_" +
                             "viz-" + plots[i] + ".png";
-                            /* addPlot(plotPath, plotName); */
-                            document.getElementById("test").value += plotName + "\n";
+                            addPlot(plotPath, plotName);
+                            // document.getElementById("test").value += plotName + "\n";
                         }
                     }
                     else {
@@ -93,8 +93,8 @@ function changePlot() {
                             "category-" + chosenCat[iCat] + "_" +
                             "weights-" + chosenWei[iWei] + "_" +
                             "viz-" + plans[i] + ".png";
-                            /* addPlot(plotPath, plotName); */
-                            document.getElementById("test").value += plotName + "\n";
+                            addPlot(plotPath, plotName);
+                            // document.getElementById("test").value += plotName + "\n";
                         }
                     }
                 }
