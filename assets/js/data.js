@@ -101,11 +101,11 @@ var namesCat = [
 	"2",
 ];
 var valuesCat = [
+	"m2",
+	"m1",
 	"0",
 	"1",
 	"2",
-	"m1",
-	"m2",
 ];
 
 /* Plans */

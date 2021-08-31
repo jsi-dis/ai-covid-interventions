@@ -388,8 +388,10 @@ def save_data_js(df, file_name):
                 f.write('\t"{}",\n'.format(category.replace('m', '-')))
         f.write('];\n')
         f.write('var valuesCat = [\n')
-        for category in categories:
-            f.write(f'\t"{category}",\n')
+        # Make sure the categories are sorted correctly
+        for category in ['m2', 'm1', '0', '1', '2']:
+            if category in categories:
+                f.write(f'\t"{category}",\n')
         f.write('];\n')
         f.write('\n/* Plans */\n')
         f.write('var plans = [\n')
