@@ -14,7 +14,7 @@ selectCol.innerHTML = contentsCol;
 
 /* Adds the plot to the div */
 function addPlot(path, plotName) {
-  let plotWidth = 100 / col.value;
+  var plotWidth = 100 / col.value;
   var elemDiv = document.createElement('div');
   var elemA = document.createElement('a');
   var elemImg = document.createElement("img");
@@ -31,9 +31,9 @@ function addPlot(path, plotName) {
 
 /* Move the dropdown selection to the previous item in the list */
 function getPrev(ele) {
-  let select = document.getElementById(ele.id.substring(0, 3));
-  let len = select.length;
-  let curr_index = select.selectedIndex;
+  var select = document.getElementById(ele.id.substring(0, 3));
+  var len = select.length;
+  var curr_index = select.selectedIndex;
   if (curr_index > 0) {
     select.selectedIndex--;
   } else {
@@ -44,9 +44,9 @@ function getPrev(ele) {
 
 /* Move the dropdown selection to the next item in the list */
 function getNext(ele) {
-  let select = document.getElementById(ele.id.substring(0, 3));
-  let len = select.length;
-  let curr_index = select.selectedIndex;
+  var select = document.getElementById(ele.id.substring(0, 3));
+  var len = select.length;
+  var curr_index = select.selectedIndex;
   if (curr_index < len - 1) {
     select.selectedIndex++;
   } else {

@@ -54,12 +54,12 @@ selectNode(document.getElementById(selectedNode));
 /* Show the plots wrt the chosen country, category, weights and visualization.
 Exactly one of these categories contains all possible values, the rest only the chosen one. */
 function changePlot() {
-	let plotName;
-	let chosenCou = [cou.value]
-	let chosenCat = [cat.value];
-	let chosenWei = [wei.value];
-	let chosenViz = [viz.value];
-	let textName;
+	var plotName;
+	var chosenCou = [cou.value]
+	var chosenCat = [cat.value];
+	var chosenWei = [wei.value];
+	var chosenViz = [viz.value];
+	var textName;
 	document.getElementById("images").innerHTML = "";
 	// document.getElementById("test").value = "";
 	if (selectedNode === "couAll") {
@@ -73,12 +73,12 @@ function changePlot() {
 	} else if (selectedNode === "vizAll") {
 		chosenViz = [...valuesViz];
 	}
-	for (let iCou = 0; iCou < chosenCou.length; iCou++) {
-		for (let iCat = 0; iCat < chosenCat.length; iCat++) {
-            for (let iWei = 0; iWei < chosenWei.length; iWei++) {
-                for (let iViz = 0; iViz < chosenViz.length; iViz++) {
+	for (var iCou = 0; iCou < chosenCou.length; iCou++) {
+		for (var iCat = 0; iCat < chosenCat.length; iCat++) {
+            for (var iWei = 0; iWei < chosenWei.length; iWei++) {
+                for (var iViz = 0; iViz < chosenViz.length; iViz++) {
                     if (chosenViz[iViz] === 'various')  {
-                        for (var i = 0; i < plots.length; i++) {
+                        for (let i = 0; i < plots.length; i++) {
                             plotName = "country-" + chosenCou[iCou] + "_" +
                             "category-" + chosenCat[iCat] + "_" +
                             "weights-" + chosenWei[iWei] + "_" +
@@ -88,7 +88,7 @@ function changePlot() {
                         }
                     }
                     else {
-                        for (var i = 0; i < plans.length; i++) {
+                        for (let i = 0; i < plans.length; i++) {
                             plotName = "country-" + chosenCou[iCou] + "_" +
                             "category-" + chosenCat[iCat] + "_" +
                             "weights-" + chosenWei[iWei] + "_" +
