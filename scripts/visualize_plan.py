@@ -316,6 +316,11 @@ def plot_data(path_in, path_out):
         for string in os.path.basename(file_in).split('.csv')[0].split('_'):
             key, value = string.split('-')
             info.update({key: value})
+        stringency_label = STRINGENCY_LABEL
+        # Special case when the stringency is computed from the GDP
+        if info['weights'] == 'gdp':
+            stringency_label = 'GDP loss [%]'
+            df[STRINGENCY_COL] *= 100
         file_name = os.path.join(
             path_out, 'country-{}-{}_category-{}_weights-{}_viz-XXX.png'.format(
                 info['country'].lower().replace(' ', ''), info['start'], info['category'],
@@ -328,7 +333,7 @@ def plot_data(path_in, path_out):
         fig_obj = plot_objectives(
             df, infections_col=INFECTIONS_COL, prescription=PRESCRIPTION,
             stringency_col=STRINGENCY_COL, infections_label=INFECTIONS_LABEL + ' (avg)',
-            stringency_label=STRINGENCY_LABEL + ' (avg)',
+            stringency_label=stringency_label + ' (avg)',
             title='{}<br><sup>{}</sup>'.format('Average infections vs. stringency', title_info)
         )
         fig_obj.write_image(file_name.replace('XXX', 'objectives'))
@@ -340,9 +345,9 @@ def plot_data(path_in, path_out):
         fig_inf.write_image(file_name.replace('XXX', 'infections'))
         # Stringency
         fig_str = plot_objective_together(
-            df, objective_col=STRINGENCY_COL, objective_label=STRINGENCY_LABEL,
+            df, objective_col=STRINGENCY_COL, objective_label=stringency_label,
             prescription=PRESCRIPTION,
-            title='{}<br><sup>{}</sup>'.format(STRINGENCY_LABEL, title_info))
+            title='{}<br><sup>{}</sup>'.format(stringency_label, title_info))
         fig_str.write_image(file_name.replace('XXX', 'stringency'))
         # Separate plans
         policies_df = get_policies()
