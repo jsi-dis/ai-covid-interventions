@@ -366,7 +366,6 @@ def save_data_js(df, file_name):
     country_values = df['country-value'].unique()
     country_names = df['country-name'].unique()
     categories = df['category'].unique()
-    weights = df['weights'].unique()
     plans = df['plan'].unique()
     with open(file_name, 'w') as f:
         f.write('/******************************/\n')
@@ -383,8 +382,10 @@ def save_data_js(df, file_name):
         f.write('];\n')
         f.write('\n/* Categories */\n')
         f.write('var namesCat = [\n')
-        for category in categories:
-            f.write('\t"{}",\n'.format(category.replace('m', '-')))
+        # Make sure the categories are sorted correctly
+        for category in ['m2', 'm1', '0', '1', '2']:
+            if category in categories:
+                f.write('\t"{}",\n'.format(category.replace('m', '-')))
         f.write('];\n')
         f.write('var valuesCat = [\n')
         for category in categories:
