@@ -24,22 +24,22 @@ columns
 <tr>
 <td class="select" align="center">
 <button id="couPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="cou" onchange="changePlot()" style="width:300px;"></select>
+<select id="cou" onchange="changePlot()" style="width:240px;"></select>
 <button id="couNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 <td class="select" align="center">
 <button id="catPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="cat" onchange="changePlot()" style="width:100px;"></select>
+<select id="cat" onchange="changePlot()" style="width:120px;"></select>
 <button id="catNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 <td class="select" align="center">
 <button id="weiPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="wei" onchange="changePlot()" style="width:100px;"></select>
+<select id="wei" onchange="changePlot()" style="width:120px;"></select>
 <button id="weiNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 <td class="select" align="center">
 <button id="vizPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="viz" onchange="changePlot()" style="width:200px;"></select>
+<select id="viz" onchange="changePlot()" style="width:240px;"></select>
 <button id="vizNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 </tr>

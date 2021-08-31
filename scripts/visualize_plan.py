@@ -364,37 +364,35 @@ def plot_data(path_in, path_out):
 
 def save_data_js(df, file_name):
     """Creates a JavaScript file with information about the data from the input DataFrame. """
-    df['country-value'] = df[['country', 'start']].apply(
+    df['country-date'] = df[['country', 'start']].apply(
         lambda x: '{}-{}'.format(str(x[0]).lower().replace(' ', ''), x[1]), axis=1)
-    df['country-name'] = df[['country', 'start']].apply(
-        lambda x: get_country_date_string(x[0], x[1]), axis=1)
-    country_values = df['country-value'].unique()
-    country_names = df['country-name'].unique()
+    countries = df['country'].unique()
     categories = df['category'].unique()
     plans = df['plan'].unique()
+    category_order = ['m2', 'm1', '0', '1', '2']
     with open(file_name, 'w') as f:
         f.write('/******************************/\n')
         f.write('/* Automatically created file */\n')
         f.write('/******************************/\n')
         f.write('\n/* Countries */\n')
         f.write('var namesCou = [\n')
-        for name in country_names:
-            f.write(f'\t"{name}",\n')
+        for country in countries:
+            f.write(f'\t"{country}",\n')
         f.write('];\n')
         f.write('var valuesCou = [\n')
-        for value in country_values:
-            f.write(f'\t"{value}",\n')
+        for country in countries:
+            f.write('\t"{}",\n'.format(country.lower().replace(' ', '')))
         f.write('];\n')
         f.write('\n/* Categories */\n')
         f.write('var namesCat = [\n')
         # Make sure the categories are sorted correctly
-        for category in ['m2', 'm1', '0', '1', '2']:
+        for category in category_order:
             if category in categories:
                 f.write('\t"{}",\n'.format(category.replace('m', '-')))
         f.write('];\n')
         f.write('var valuesCat = [\n')
         # Make sure the categories are sorted correctly
-        for category in ['m2', 'm1', '0', '1', '2']:
+        for category in category_order:
             if category in categories:
                 f.write(f'\t"{category}",\n')
         f.write('];\n')
@@ -405,19 +403,35 @@ def save_data_js(df, file_name):
         f.write('];\n')
         f.write('\n/* Not all categories are available for all countries */\n')
         f.write('var couCat = {\n')
-        for country_value in country_values:
-            f.write(f'\t"{country_value}": [\n')
-            for category in df[df['country-value'] == country_value]['category'].unique():
-                f.write(f'\t\t"{category}",\n')
+        for country in countries:
+            f.write('\t"{}": [\n'.format(country.lower().replace(' ', '')))
+            df_country = df[df['country'] == country]
+            for category in category_order:
+                if category in df_country['category'].unique():
+                    df_category = df_country[df_country['category'] == category]
+                    for date in df_category['start'].unique():
+                        f.write('\t\t"country-{}-{}_category-{}",\n'.format(
+                            country.lower().replace(' ', ''),
+                            date,
+                            category
+                        ))
             f.write('\t],\n')
         f.write('};\n')
         f.write('\n/* Not all countries are available for all categories */\n')
         f.write('var catCou = {\n')
-        for category in categories:
-            f.write(f'\t"{category}": [\n')
-            for country_value in df[df['category'] == category]['country-value'].unique():
-                f.write(f'\t\t"{country_value}",\n')
-            f.write('\t],\n')
+        for category in category_order:
+            if category in df['category'].unique():
+                f.write('\t"{}": [\n'.format(category))
+                df_category = df[df['category'] == category]
+                for country in countries:
+                    df_country = df_category[df_category['country'] == country]
+                    for date in df_country['start'].unique():
+                        f.write('\t\t"country-{}-{}_category-{}",\n'.format(
+                            country.lower().replace(' ', ''),
+                            date,
+                            category
+                        ))
+                f.write('\t],\n')
         f.write('};\n')
 
 

@@ -55,47 +55,42 @@ selectNode(document.getElementById(selectedNode));
 Exactly one of these categories contains all possible values, the rest only the chosen one. */
 function changePlot() {
 	var plotName;
-	var chosenCou = [cou.value]
-	var chosenCat = [cat.value];
 	var chosenWei = [wei.value];
 	var chosenViz = [viz.value];
 	var textName;
 	document.getElementById("images").innerHTML = "";
 	// document.getElementById("test").value = "";
+	var chosenCC = [];
 	if (selectedNode === "couAll") {
-		chosenCou = [...valuesCou];
-		/* chosenCou = catCou[cat.value]; */
+		chosenCC = catCou[cat.value];
 	} else if (selectedNode === "catAll") {
-		chosenCat = [...valuesCat];
-		/* chosenCat = couCat[cou.value]; */
+		chosenCC = couCat[cou.value];
 	} else if (selectedNode === "weiAll") {
 		chosenWei = [...valuesWei];
+		chosenCC = catCou[cat.value].filter(function(n) {
+            return couCat[cou.value].indexOf(n) !== -1;
+        })
 	} else if (selectedNode === "vizAll") {
 		chosenViz = [...valuesViz];
+		chosenCC = catCou[cat.value].filter(function(n) {
+            return couCat[cou.value].indexOf(n) !== -1;
+        })
 	}
-	for (var iCou = 0; iCou < chosenCou.length; iCou++) {
-		for (var iCat = 0; iCat < chosenCat.length; iCat++) {
-            for (var iWei = 0; iWei < chosenWei.length; iWei++) {
-                for (var iViz = 0; iViz < chosenViz.length; iViz++) {
-                    if (chosenViz[iViz] === 'various')  {
-                        for (let i = 0; i < plots.length; i++) {
-                            plotName = "country-" + chosenCou[iCou] + "_" +
-                            "category-" + chosenCat[iCat] + "_" +
-                            "weights-" + chosenWei[iWei] + "_" +
-                            "viz-" + plots[i] + ".png";
-                            addPlot(plotPath, plotName);
-                            // document.getElementById("test").value += plotName + "\n";
-                        }
+	for (var iCC = 0; iCC < chosenCC.length; iCC++) {
+        for (var iWei = 0; iWei < chosenWei.length; iWei++) {
+            for (var iViz = 0; iViz < chosenViz.length; iViz++) {
+                if (chosenViz[iViz] === 'various')  {
+                    for (let i = 0; i < plots.length; i++) {
+                        plotName = chosenCC[iCC] + "_" + "weights-" + chosenWei[iWei] + "_" + "viz-" + plots[i] + ".png";
+                        addPlot(plotPath, plotName);
+                        // document.getElementById("test").value += plotName + "\n";
                     }
-                    else {
-                        for (let i = 0; i < plans.length; i++) {
-                            plotName = "country-" + chosenCou[iCou] + "_" +
-                            "category-" + chosenCat[iCat] + "_" +
-                            "weights-" + chosenWei[iWei] + "_" +
-                            "viz-" + plans[i] + ".png";
-                            addPlot(plotPath, plotName);
-                            // document.getElementById("test").value += plotName + "\n";
-                        }
+                }
+                else {
+                    for (let i = 0; i < plans.length; i++) {
+                        plotName = chosenCC[iCC] + "_" + "weights-" + chosenWei[iWei] + "_" + "viz-" + plans[i] + ".png";
+                        addPlot(plotPath, plotName);
+                        // document.getElementById("test").value += plotName + "\n";
                     }
                 }
             }
