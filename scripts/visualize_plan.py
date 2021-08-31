@@ -179,9 +179,7 @@ def plot_objectives(df, infections_col='Infections', stringency_col='Stringency'
         )
         fig.for_each_trace(
             lambda t: t.update(textfont_color=t.marker.color, customdata=[t.marker.color],
-                               # Dirty hack to achieve that 'Implemented plan' is not cut out
-                               textposition='top center' if 'Implemented' in t.name
-                               else 'top right'))
+                               textposition='top center'))
         fig.update_traces(cliponaxis=False)
         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[1]))
         fig.update_layout(showlegend=False, hovermode='closest')
@@ -324,7 +322,7 @@ def plot_data(path_in, path_out):
                 info['weights']))
         title_info = '{}, cat. {}, {} weights'.format(
             get_country_date_string(info['country'], info['start']),
-            info['category'].replace('m', '-'), info['weights']
+            info['category'].replace('m', '-'), info['weights'].replace('gdp', 'GDP')
         )
         # Plot of the objective space
         fig_obj = plot_objectives(
