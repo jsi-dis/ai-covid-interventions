@@ -179,8 +179,10 @@ def plot_objectives(df, infections_col='Infections', stringency_col='Stringency'
         )
         fig.for_each_trace(
             lambda t: t.update(textfont_color=t.marker.color, customdata=[t.marker.color],
-                               # Dirty hack to achieve that 'All *' is not cut out of the picture
-                               textposition='top right' if 'All' not in t.name else 'top center'))
+                               # Dirty hack to achieve that 'Implemented plan' is not cut out
+                               textposition='top center' if 'Implemented' in t.name
+                               else 'top right'))
+        fig.update_traces(cliponaxis=False)
         fig.for_each_annotation(lambda a: a.update(text=a.text.split("=")[1]))
         fig.update_layout(showlegend=False, hovermode='closest')
         fig.update_layout(**PLAIN_LAYOUT)
@@ -294,7 +296,7 @@ def plot_policy_heatmap(df, policies_df, plan='Plan 1', plan_color=None, title='
 
 
 def get_country_date_string(country, date):
-    return '{} {}-{}-{}'.format(country, date[:4], date[4:6], date[6:8])
+    return '{}, {}-{}-{}'.format(country, date[:4], date[4:6], date[6:8])
 
 
 def plot_data(path_in, path_out):
@@ -304,6 +306,7 @@ def plot_data(path_in, path_out):
     """
     info_df = pd.DataFrame(columns=['country', 'category', 'weights', 'start', 'plan'])
     for file_in in glob.glob(os.path.join(path_in, '*.csv')):
+        print(f'Working on {file_in}')
         df = pd.read_csv(file_in, sep=',')
         add_country(df)
         info = {
@@ -321,7 +324,7 @@ def plot_data(path_in, path_out):
                 info['weights']))
         title_info = '{}, cat. {}, {} weights'.format(
             get_country_date_string(info['country'], info['start']),
-            info['category'], info['weights'].replace('m', '-')
+            info['category'].replace('m', '-'), info['weights']
         )
         # Plot of the objective space
         fig_obj = plot_objectives(
