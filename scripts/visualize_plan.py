@@ -42,7 +42,7 @@ COLORS_MAP.update({
     'All mid': '#5e5e5e',
     'All max': '#303030',
     'Current': '#cc6699',
-    'Implemented plan': '#cc6699'
+    'Implemented plan': '#303030'
 })
 # Set continuous colors
 COLORS_SEQUENTIAL = px.colors.sequential.Sunsetdark
