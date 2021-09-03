@@ -74,7 +74,8 @@ var plans = [
 	"plan8",
 	"plan9",
 	"plan10",
-	"implementedplan",
+	"implementedplanpredicted",
+	"implementedplanreal",
 ];
 
 /* Not all categories are available for all countries */

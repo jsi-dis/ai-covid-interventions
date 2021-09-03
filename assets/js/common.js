@@ -6,7 +6,7 @@
 var selectCol = document.getElementById("col");
 var valuesCol = [];
 var contentsCol;
-for (let i = 1; i <= 11; i++) {
+for (let i = 1; i <= 15; i++) {
   valuesCol.push(i);
   contentsCol += "<option>" + i + "</option>";
 }

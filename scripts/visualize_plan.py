@@ -1,5 +1,6 @@
 import os
 import glob
+import re
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -43,8 +44,8 @@ COLORS_MAP.update({
     'All max': '#303030',
     'Current': '#cc6699',
     'Implemented plan': '#303030',
-    'Implemented (predicted)': '#303030',
-    'Implemented (real)': '#5e5e5e'
+    'Implemented plan (predicted)': '#303030',
+    'Implemented plan (real)': '#5e5e5e'
 })
 # Set continuous colors
 COLORS_SEQUENTIAL = px.colors.sequential.Sunsetdark
@@ -308,6 +309,9 @@ def plot_data(path_in, path_out):
     for file_in in glob.glob(os.path.join(path_in, '*.csv')):
         print(f'Working on {file_in}')
         df = pd.read_csv(file_in, sep=',')
+        # Adjust names of implemented plans
+        df.replace('Implemented plan real', 'Implemented plan (real)', inplace=True)
+        df.replace('Implemented plan', 'Implemented plan (predicted)', inplace=True)
         add_country(df)
         info = {
             'country': None,
@@ -358,7 +362,7 @@ def plot_data(path_in, path_out):
             fig = plot_policy_heatmap(
                 df, policies_df, plan=plan, prescription=PRESCRIPTION,
                 title='{}<br><sup>{}</sup>'.format(plan, title_info))
-            info.update({'plan': plan.lower().replace(' ', '')})
+            info.update({'plan': re.sub(r"[^\w+]", '', plan.lower())})  # Remove spaces and brackets
             fig.write_image(file_name.replace('XXX', info['plan']))
             info_df.loc[len(info_df)] = info
     return info_df
@@ -438,7 +442,7 @@ def save_data_js(df, file_name):
 
 
 if __name__ == '__main__':
-    input_folder = os.path.join('..', 'data')
+    input_folder = os.path.join('..', 'data2')
     output_folder = os.path.join('..', 'assets', 'img', 'plots')
     data = plot_data(path_in=input_folder, path_out=output_folder)
     save_data_js(data, os.path.join('..', 'assets', 'js', 'data.js'))
