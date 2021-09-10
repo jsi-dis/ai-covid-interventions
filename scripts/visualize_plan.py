@@ -442,7 +442,7 @@ def save_data_js(df, file_name):
 
 
 if __name__ == '__main__':
-    input_folder = os.path.join('..', 'data2')
+    input_folder = os.path.join('..', 'data')
     output_folder = os.path.join('..', 'assets', 'img', 'plots')
     data = plot_data(path_in=input_folder, path_out=output_folder)
     save_data_js(data, os.path.join('..', 'assets', 'js', 'data.js'))
