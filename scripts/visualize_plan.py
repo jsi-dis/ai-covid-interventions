@@ -306,7 +306,8 @@ def plot_data(path_in, path_out):
     path for all files in the input path.
     Returns a DataFrame containing information about this data.
     """
-    info_df = pd.DataFrame(columns=['country', 'category', 'weights', 'start', 'plan'])
+    info_df = pd.DataFrame(
+        columns=['country', 'category', 'weights', 'start', 'plan', 'granularity'])
     for file_in in glob.glob(os.path.join(path_in, '*.csv')):
         print(f'Working on {file_in}')
         df = pd.read_csv(file_in, sep=',')
@@ -321,6 +322,7 @@ def plot_data(path_in, path_out):
             'country': None,
             'category': None,
             'weights': None,
+            'granularity': None,
             'start': None
         }
         for string in os.path.basename(file_in).split('.csv')[0].split('_'):
@@ -332,12 +334,13 @@ def plot_data(path_in, path_out):
             stringency_label = 'GDP loss [%]'
             df[STRINGENCY_COL] *= 100
         file_name = os.path.join(
-            path_out, 'country-{}-{}_category-{}_weights-{}_viz-XXX.png'.format(
+            path_out, 'country-{}-{}_category-{}_weights-{}_granularity-{}_viz-XXX.png'.format(
                 info['country'].lower().replace(' ', ''), info['start'], info['category'],
-                info['weights']))
-        title_info = '{}, cat. {}, {} weights'.format(
+                info['weights'], info['granularity']))
+        title_info = '{}, cat. {}, {} weights, {} granularity'.format(
             get_country_date_string(info['country'], info['start']),
-            info['category'].replace('m', '-'), info['weights'].replace('gdp', 'GDP')
+            info['category'].replace('m', '-'), info['weights'].replace('gdp', 'GDP'),
+            info['granularity']
         )
         # Plot of the objective space
         fig_obj = plot_objectives(

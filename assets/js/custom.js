@@ -80,6 +80,11 @@ function changePlot() {
 		chosenCC = catCou[cat.value].filter(function(n) {
             return couCat[cou.value].indexOf(n) !== -1;
         })
+	} else if (selectedNode === "graAll") {
+		chosenGra = [...valuesGra];
+		chosenCC = catCou[cat.value].filter(function(n) {
+            return couCat[cou.value].indexOf(n) !== -1;
+        })
 	} else if (selectedNode === "vizAll") {
 		chosenViz = [...valuesViz];
 		chosenCC = catCou[cat.value].filter(function(n) {
@@ -88,24 +93,24 @@ function changePlot() {
 	}
 	for (var iCC = 0; iCC < chosenCC.length; iCC++) {
         for (var iWei = 0; iWei < chosenWei.length; iWei++) {
-            //for (var iGra = 0; iGra < chosenGra.length; iGra++) {
+            for (var iGra = 0; iGra < chosenGra.length; iGra++) {
                 for (var iViz = 0; iViz < chosenViz.length; iViz++) {
                     if (chosenViz[iViz] === 'various')  {
                         for (let i = 0; i < plots.length; i++) {
-                            plotName = chosenCC[iCC] + "_" + "weights-" + chosenWei[iWei] + "_" + "viz-" + plots[i] + ".png";
+                            plotName = chosenCC[iCC] + "_" + "weights-" + chosenWei[iWei] + "_" + "granularity-" + chosenGra[iGra] + "_" + "viz-" + plots[i] + ".png";
                             addPlot(plotPath, plotName);
                             // document.getElementById("test").value += plotName + "\n";
                         }
                     }
                     else {
                         for (let i = 0; i < plans.length; i++) {
-                            plotName = chosenCC[iCC] + "_" + "weights-" + chosenWei[iWei] + "_" + "viz-" + plans[i] + ".png";
+                            plotName = chosenCC[iCC] + "_" + "weights-" + chosenWei[iWei] + "_" + "granularity-" + chosenGra[iGra] + "_" + "viz-" + plans[i] + ".png";
                             addPlot(plotPath, plotName);
                             // document.getElementById("test").value += plotName + "\n";
                         }
                     }
                 }
-            //}
+            }
         }
 	}
 }
