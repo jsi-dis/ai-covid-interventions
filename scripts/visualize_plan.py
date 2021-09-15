@@ -337,7 +337,7 @@ def plot_data(path_in, path_out):
             path_out, 'country-{}-{}_category-{}_weights-{}_granularity-{}_viz-XXX.png'.format(
                 info['country'].lower().replace(' ', ''), info['start'], info['category'],
                 info['weights'], info['granularity']))
-        title_info = '{}, cat. {}, {} weights, {} granularity'.format(
+        title_info = '{}, cat. {}, {} weights, granularity {}'.format(
             get_country_date_string(info['country'], info['start']),
             info['category'].replace('m', '-'), info['weights'].replace('gdp', 'GDP'),
             info['granularity']
