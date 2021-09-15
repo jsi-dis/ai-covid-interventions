@@ -11,6 +11,7 @@ import warnings
 
 # Column names
 INFECTIONS_COL = 'Infections'
+INFECTIONS_COL_REAL = 'InfectionsRolling'
 INFECTIONS_LABEL = 'New daily infections'
 STRINGENCY_COL = 'Stringency'
 STRINGENCY_LABEL = 'Daily stringency of interventions'
@@ -312,6 +313,9 @@ def plot_data(path_in, path_out):
         # Adjust names of implemented plans
         df.replace('Implemented plan real', 'Implemented plan (real)', inplace=True)
         df.replace('Implemented plan', 'Implemented plan (predicted)', inplace=True)
+        # Use rolling infections for the real plan
+        df.loc[(df[PRESCRIPTION] == 'Implemented plan (real)'), INFECTIONS_COL] = df[
+            INFECTIONS_COL_REAL]
         add_country(df)
         info = {
             'country': None,
