@@ -54,11 +54,11 @@ var valuesCou = [
 
 /* Categories */
 var namesCat = [
-	"-2",
-	"-1",
-	"0",
-	"1",
-	"2",
+	"Infections falling steeply",
+	"Infections falling",
+	"Infections steady",
+	"Infections rising",
+	"Infections rising steeply",
 ];
 var valuesCat = [
 	"m2",

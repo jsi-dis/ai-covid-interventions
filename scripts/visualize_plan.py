@@ -49,6 +49,13 @@ POLICIES = ['C1_School closing', 'C2_Workplace closing', 'C3_Cancel public event
             'C8_International travel controls', 'H1_Public information campaigns',
             'H2_Testing policy', 'H3_Contact tracing', 'H6_Facial Coverings']
 
+CATEGORY_LABELS = {
+    'm2': 'infections falling steeply',
+    'm1': 'infections falling',
+    '0': 'infections steady',
+    '1': 'infections rising',
+    '2': 'infections rising steeply'
+}
 
 def get_rgb_color(color):
     """
@@ -328,16 +335,9 @@ def plot_data(path_in, path_out):
             path_out, 'country-{}-{}_category-{}_weights-{}_granularity-{}_viz-XXX.png'.format(
                 info['country'].lower().replace(' ', ''), info['start'], info['category'],
                 info['weights'], info['granularity']))
-        category_labels = {
-            'm2': 'infections falling steeply',
-            'm1': 'infections falling',
-            '0': 'infections steady',
-            '1': 'infections rising',
-            '2': 'infections rising steeply'
-        }
         title_info = '{}, {}, {} weights, granularity {}'.format(
             get_country_date_string(info['country'], info['start']),
-            category_labels[info['category']], info['weights'].replace('gdp', 'GDP'),
+            CATEGORY_LABELS[info['category']], info['weights'].replace('gdp', 'GDP'),
             info['granularity']
         )
         # Plot of the objective space
@@ -399,7 +399,7 @@ def save_data_js(df, file_name):
         # Make sure the categories are sorted correctly
         for category in category_order:
             if category in categories:
-                f.write('\t"{}",\n'.format(category.replace('m', '-')))
+                f.write('\t"{}",\n'.format(CATEGORY_LABELS[category].capitalize()))
         f.write('];\n')
         f.write('var valuesCat = [\n')
         # Make sure the categories are sorted correctly

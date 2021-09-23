@@ -30,7 +30,7 @@ columns
 </td>
 <td class="select" align="center">
 <button id="catPrev" onclick="getPrev(this)" class="button"><i class="arrow left"></i></button>
-<select id="cat" onchange="changePlot()" style="width:120px;"></select>
+<select id="cat" onchange="changePlot()" style="width:240px;"></select>
 <button id="catNext" onclick="getNext(this)" class="button"><i class="arrow right"></i></button>
 </td>
 <td class="select" align="center">
