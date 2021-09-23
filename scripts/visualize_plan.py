@@ -299,7 +299,7 @@ def get_country_date_string(country, date):
     return '{}, {}-{}-{}'.format(country, date[:4], date[4:6], date[6:8])
 
 
-def plot_data(path_in, path_out):
+def plot_data(path_in, path_out, file_format='png'):
     """Creates plots (objective space, infections, stringency, heatmaps for each plan) in the output
     path for all files in the input path.
     Returns a DataFrame containing information about this data.
@@ -332,9 +332,9 @@ def plot_data(path_in, path_out):
             stringency_label = 'GDP loss [%]'
             df[STRINGENCY_COL] *= 100
         file_name = os.path.join(
-            path_out, 'country-{}-{}_category-{}_weights-{}_granularity-{}_viz-XXX.png'.format(
+            path_out, 'country-{}-{}_category-{}_weights-{}_granularity-{}_viz-XXX.{}'.format(
                 info['country'].lower().replace(' ', ''), info['start'], info['category'],
-                info['weights'], info['granularity']))
+                info['weights'], info['granularity'], file_format))
         title_info = '{}, {}, {} weights, granularity {}'.format(
             get_country_date_string(info['country'], info['start']),
             CATEGORY_LABELS[info['category']], info['weights'].replace('gdp', 'GDP'),
