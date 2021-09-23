@@ -20,20 +20,11 @@ PRESCRIPTION = 'PrescriptionIndex'
 # Set the colors of the background and grid
 PLAIN_LAYOUT = dict(
     plot_bgcolor='white',
-    font=dict(color='dimgray', family='Balto, Gravitas One, Arial'),
+    font=dict(color='dimgray', family='Balto, Gravitas One, Arial', size=16),
     xaxis=dict(showline=True, linewidth=1, linecolor='dimgray', zerolinecolor='lightgray',
                gridcolor='lightgray'),
     yaxis=dict(showline=True, linewidth=1, linecolor='dimgray', zerolinecolor='lightgray',
                gridcolor='lightgray'),
-    # For 3-D plots
-    scene=dict(
-        xaxis=dict(showline=True, linewidth=1, linecolor='dimgray', zerolinecolor='lightgray',
-                   gridcolor='lightgray', backgroundcolor='white'),
-        yaxis=dict(showline=True, linewidth=1, linecolor='dimgray', zerolinecolor='lightgray',
-                   gridcolor='lightgray', backgroundcolor='white'),
-        zaxis=dict(showline=True, linewidth=1, linecolor='dimgray', zerolinecolor='lightgray',
-                   gridcolor='lightgray', backgroundcolor='white'),
-    )
 )
 
 # Set the color of the discrete traces
