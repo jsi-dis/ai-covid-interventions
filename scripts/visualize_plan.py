@@ -57,6 +57,7 @@ CATEGORY_LABELS = {
     '2': 'infections rising steeply'
 }
 
+
 def get_rgb_color(color):
     """
     Returns the color in RGB form (r, g, b), where r, g, b are from [0, 1] from color written
@@ -214,7 +215,7 @@ def plot_objective_together(df, objective_col='Infections', objective_label='Inf
             hover_data={'Country': False, 'Date': False}
         )
         fig.update_layout(xaxis=dict(title=''), yaxis=dict(title=''), showlegend=True)
-        fig.update_layout(hovermode='x')
+        fig.update_layout(hovermode='x', legend=dict(title=None))
         fig.update_layout(**PLAIN_LAYOUT)
         if layout_dict is not None:
             fig.update_layout(**layout_dict)
