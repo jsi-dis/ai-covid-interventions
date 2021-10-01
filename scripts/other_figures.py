@@ -1,12 +1,6 @@
 import os
-import glob
-import re
-import numpy as np
 import pandas as pd
 import plotly.express as px
-import plotly.graph_objs as go
-import plotly.colors as pc
-from plotly.subplots import make_subplots
 import warnings
 from visualize_plan import COLORS_DISCRETE, PLAIN_LAYOUT
 
@@ -15,7 +9,7 @@ LABEL_X = 'Time (number of days)'
 
 
 def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict=None,
-               layout_dict=None):
+               colors=COLORS_DISCRETE, layout_dict=None):
     """Creates a line plot for the given data frame.
 
     The data frame (df) should have columns 'x', 'y' that contain the data for the lines and 'name',
@@ -28,8 +22,7 @@ def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict
             y='y',
             color='name',
             line_dash=line_dash,
-            color_discrete_sequence=COLORS_DISCRETE,
-            #category_orders='name',
+            color_discrete_sequence=colors,
             title=title,
         )
         fig.update_layout(xaxis=dict(title=x_label), yaxis=dict(title=y_label), showlegend=True)
@@ -55,7 +48,12 @@ def plot_prediction(input_folder, output_folder, country, ending='png'):
     df = pd.melt(df, id_vars=['x'], var_name='name', value_name='y')
     title = f'New daily infections<br><sup>{country}</sup>'
     # Make the plot
-    fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='')
+    colors = COLORS_DISCRETE
+    if country == 'Norway':
+        # Switch colors ease differentiation
+        colors[2] = COLORS_DISCRETE[3]
+        colors[3] = COLORS_DISCRETE[2]
+    fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='', colors=colors)
     if country == 'Norway':
         fig.add_shape(
             type='line',
@@ -111,6 +109,7 @@ def plot_npi_intensity(input_folder, output_folder, ending='png'):
     # Make the plot
     fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='', line_dash='line_dash',
                      legend_dict=legend_dict)
+    fig.for_each_trace(lambda t: t.update(name=t.name.split(",")[0]))
     fig.write_image(file_plot, width=900)  # Default width = 700, height = 500
 
 
@@ -122,6 +121,7 @@ def plot_coefficients(input_folder, output_folder, ending):
     df = pd.read_csv(file_data, sep=',')
     # Make the plot
     fig = px.bar(df, x='Coefficient', y='NPI', orientation='h',
+                 color_discrete_sequence=COLORS_DISCRETE,
                  title='NPI coefficients from the linear model')
     # Add annotations
     annotations = []
