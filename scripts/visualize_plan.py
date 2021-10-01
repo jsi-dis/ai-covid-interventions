@@ -58,6 +58,15 @@ CATEGORY_LABELS = {
 }
 
 
+def get_stringency_label(label, weights):
+    if weights == 'social':
+        return label.replace('stringency', 'social cost')
+    if weights == 'gdp':
+        return label.replace('stringency', 'GDP loss [%]')
+    if weights == 'combined':
+        return label.replace('stringency', 'socio-economic cost')
+
+
 def get_rgb_color(color):
     """
     Returns the color in RGB form (r, g, b), where r, g, b are from [0, 1] from color written
@@ -305,6 +314,22 @@ def plot_data(path_in, path_out, file_format='png'):
     path for all files in the input path.
     Returns a DataFrame containing information about this data.
     """
+    selected_for_paper = [
+        {
+            'country': 'Belgium',
+            'category': '1',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20200401'
+        },
+        {
+            'country': 'France',
+            'category': 'm2',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20201124'
+        }
+    ]
     info_df = pd.DataFrame(
         columns=['country', 'category', 'weights', 'start', 'plan', 'granularity'])
     for file_in in glob.glob(os.path.join(path_in, '*.csv')):
@@ -327,26 +352,28 @@ def plot_data(path_in, path_out, file_format='png'):
         for string in os.path.basename(file_in).split('.csv')[0].split('_'):
             key, value = string.split('-')
             info.update({key: value})
-        stringency_label = STRINGENCY_LABEL
+        # Set the stringency label based on the type of weights used
+        stringency_label = get_stringency_label(STRINGENCY_LABEL, info['weights'])
         # Special case when the stringency is computed from the GDP
         if info['weights'] == 'gdp':
-            stringency_label = 'GDP loss [%]'
             df[STRINGENCY_COL] *= 100
         file_name = os.path.join(
             path_out, 'country-{}-{}_category-{}_weights-{}_granularity-{}_viz-XXX.{}'.format(
                 info['country'].lower().replace(' ', ''), info['start'], info['category'],
                 info['weights'], info['granularity'], file_format))
-        title_info = '{}, {}, {} weights, granularity {}'.format(
+        title_info = '{}, {}, {}, granularity {}'.format(
             get_country_date_string(info['country'], info['start']),
             CATEGORY_LABELS[info['category']], info['weights'].replace('gdp', 'GDP'),
             info['granularity']
         )
         # Plot of the objective space
+        objectives_label = '{}<br><sup>{}</sup>'.format(
+            get_stringency_label('Average infections vs. stringency', info['weights']), title_info)
         fig_obj = plot_objectives(
             df, infections_col=INFECTIONS_COL, prescription=PRESCRIPTION,
             stringency_col=STRINGENCY_COL, infections_label=INFECTIONS_LABEL + ' (avg)',
             stringency_label=stringency_label + ' (avg)',
-            title='{}<br><sup>{}</sup>'.format('Average infections vs. stringency', title_info)
+            title=objectives_label
         )
         fig_obj.write_image(file_name.replace('XXX', 'objectives'))
         # Infections
@@ -361,6 +388,11 @@ def plot_data(path_in, path_out, file_format='png'):
             prescription=PRESCRIPTION,
             title='{}<br><sup>{}</sup>'.format(stringency_label, title_info))
         fig_str.write_image(file_name.replace('XXX', 'stringency'))
+        if info in selected_for_paper:
+            # Make pdfs for the paper
+            fig_inf.write_image(file_name.replace('XXX', 'infections').replace('png', 'pdf'))
+            fig_obj.write_image(file_name.replace('XXX', 'objectives').replace('png', 'pdf'))
+            fig_str.write_image(file_name.replace('XXX', 'stringency').replace('png', 'pdf'))
         # Separate plans
         policies_df = get_policies()
         plans = df[PRESCRIPTION].unique()
