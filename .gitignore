@@ -2,3 +2,6 @@ _site/
 Gemfile.lock
 .idea/
 scripts/__pycache__/
+assets/img/plots/*.pdf
+scripts/figure-data/*.png
+scripts/figure-data/*.pdf
