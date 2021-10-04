@@ -6,6 +6,8 @@ from visualize_plan import COLORS_DISCRETE, PLAIN_LAYOUT
 
 
 LABEL_X = 'Time (number of days)'
+MARGIN_LEFT = 38
+MARGIN_DEFAULT = 80
 
 
 def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict=None,
@@ -50,6 +52,7 @@ def plot_error_distribution(input_folder, output_folder, ending='png'):
     fig = px.violin(df, x='Error', box=True, color_discrete_sequence=COLORS_DISCRETE, title=title,
                     labels={'Error': 'Relative error'},)
     fig.update_layout(**PLAIN_LAYOUT)
+    fig.update_layout(margin=dict(l=MARGIN_LEFT, r=MARGIN_LEFT))
     fig.write_image(file_plot)
 
 
@@ -167,6 +170,7 @@ def plot_coefficients(input_folder, output_folder, ending):
     # Adjust layout
     fig.update_layout(xaxis=dict(title=''), yaxis=dict(title='', side='right', autorange='reversed'))
     fig.update_layout(**PLAIN_LAYOUT)
+    fig.update_layout(margin=dict(r=0, b=0))
     fig.write_image(file_plot)
 
 
