@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 import warnings
 from visualize_plan import COLORS_DISCRETE, PLAIN_LAYOUT
 
@@ -88,19 +89,18 @@ def plot_prediction(input_folder, output_folder, country, ending='png'):
         y_max = 37e3
         file_name_splits = f'Prediction-Italy-splits'
         file_data_splits = os.path.join(input_folder, f'{file_name_splits}.csv')
-        splits = pd.read_csv(file_data_splits, sep=',')['Splits'].values
-        for split in splits:
-            fig.add_shape(
-                type='line',
-                x0=split, y0=y_min, x1=split, y1=y_max,
-                line=dict(color='gray', width=2))
-        fig.add_annotation(
-            x=splits[0], y=(y_max - y_min)/2,
-            xshift=-5, yshift=-10,
-            text='Splits',
-            showarrow=False,
-            xanchor='right',
-            font=dict(color='gray'))
+        splits = pd.read_csv(file_data_splits, sep=',')['Splits with delay'].values
+        for i, split in enumerate(splits):
+            fig.add_traces([
+                go.Scatter(
+                    x=[split] * 2,
+                    y=[y_min, y_max],
+                    line=dict(color='gray', dash='dot'),
+                    name='Splits',
+                    mode='lines',
+                    showlegend=(i == 0)
+                )
+            ])
         fig.update_layout(yaxis_range=[y_min, y_max])
     fig.write_image(file_plot)
 
