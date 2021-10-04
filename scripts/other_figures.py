@@ -39,6 +39,20 @@ def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict
         return []
 
 
+def plot_error_distribution(input_folder, output_folder, ending='png'):
+    file_name = 'Error'
+    file_data = os.path.join(input_folder, f'{file_name}.csv')
+    file_plot = os.path.join(output_folder, f'{file_name}.{ending}')
+    # Read data
+    df = pd.read_csv(file_data, sep=',')
+    title = 'Relative error distribution for the fitted SEIRD model'
+    # Make the plot
+    fig = px.violin(df, x='Error', box=True, color_discrete_sequence=COLORS_DISCRETE, title=title,
+                    labels={'Error': 'Relative error'},)
+    fig.update_layout(**PLAIN_LAYOUT)
+    fig.write_image(file_plot)
+
+
 def plot_prediction(input_folder, output_folder, country, ending='png'):
     file_name = f'Prediction-{country}'
     file_data = os.path.join(input_folder, f'{file_name}.csv')
@@ -66,6 +80,25 @@ def plot_prediction(input_folder, output_folder, country, ending='png'):
             showarrow=False,
             xanchor='left',
             font=dict(color='gray'))
+    if country == 'Italy':
+        y_min = -2e3
+        y_max = 37e3
+        file_name_splits = f'Prediction-Italy-splits'
+        file_data_splits = os.path.join(input_folder, f'{file_name_splits}.csv')
+        splits = pd.read_csv(file_data_splits, sep=',')['Splits'].values
+        for split in splits:
+            fig.add_shape(
+                type='line',
+                x0=split, y0=y_min, x1=split, y1=y_max,
+                line=dict(color='gray', width=2))
+        fig.add_annotation(
+            x=splits[0], y=(y_max - y_min)/2,
+            xshift=-5, yshift=-10,
+            text='Splits',
+            showarrow=False,
+            xanchor='right',
+            font=dict(color='gray'))
+        fig.update_layout(yaxis_range=[y_min, y_max])
     fig.write_image(file_plot)
 
 
@@ -138,6 +171,7 @@ def plot_coefficients(input_folder, output_folder, ending):
 
 
 def make_all_plots(input_folder, output_folder, ending='png'):
+    plot_error_distribution(input_folder, output_folder, ending)
     plot_prediction(input_folder, output_folder, 'Italy', ending)
     plot_prediction(input_folder, output_folder, 'Norway', ending)
     plot_methods(input_folder, output_folder, 'Methods-a',
