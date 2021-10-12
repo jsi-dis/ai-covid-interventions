@@ -13,8 +13,9 @@ import warnings
 INFECTIONS_COL = 'Infections'
 INFECTIONS_COL_REAL = 'InfectionsRolling'
 INFECTIONS_LABEL = 'New daily infections'
+INFECTIONS_LABEL_AVG = 'Average daily infections'
 STRINGENCY_COL = 'Stringency'
-STRINGENCY_LABEL = 'Daily stringency of interventions'
+STRINGENCY_LABEL = 'Daily stringency'
 PRESCRIPTION = 'PrescriptionIndex'
 
 # Set the colors of the background and grid
@@ -316,11 +317,11 @@ def plot_data(path_in, path_out, file_format='png'):
     """
     selected_for_paper = [
         {
-            'country': 'Belgium',
-            'category': '1',
-            'weights': 'combined',
+            'country': 'Italy',
+            'category': 'm1',
+            'weights': 'gdp',
             'granularity': '14',
-            'start': '20200401'
+            'start': '20210129'
         },
         {
             'country': 'France',
@@ -328,6 +329,41 @@ def plot_data(path_in, path_out, file_format='png'):
             'weights': 'combined',
             'granularity': '14',
             'start': '20201124'
+        },
+        {
+            'country': 'France',
+            'category': '2',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20201026'
+        },
+        {
+            'country': 'Brazil',
+            'category': '1',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20201208'
+        },
+        {
+            'country': 'Israel',
+            'category': '0',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20201119'
+        },
+        {
+            'country': 'Argentina',
+            'category': 'm1',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20201110'
+        },
+        {
+            'country': 'Hungary',
+            'category': 'm2',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20201225'
         }
     ]
     info_df = pd.DataFrame(
@@ -371,8 +407,9 @@ def plot_data(path_in, path_out, file_format='png'):
             get_stringency_label('Average infections vs. stringency', info['weights']), title_info)
         fig_obj = plot_objectives(
             df, infections_col=INFECTIONS_COL, prescription=PRESCRIPTION,
-            stringency_col=STRINGENCY_COL, infections_label=INFECTIONS_LABEL + ' (avg)',
-            stringency_label=stringency_label + ' (avg)',
+            stringency_col=STRINGENCY_COL,
+            infections_label=INFECTIONS_LABEL_AVG,
+            stringency_label=stringency_label.replace('Daily', 'Average'),
             title=objectives_label
         )
         fig_obj.write_image(file_name.replace('XXX', 'objectives'))
