@@ -111,7 +111,7 @@ def plot_methods(input_folder, output_folder, file_name, title, ending='png'):
     # Read data
     df = pd.read_csv(file_data, sep=',')
     df = pd.melt(df, id_vars=['x'], var_name='name', value_name='y')
-    title = f'{title}<br><sup>Normalized by population</sup>'
+    title = f'{title}<br><sup>Predicted daily infections normalized by population</sup>'
     # Make the plot
     fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='')
     fig.write_image(file_plot)
@@ -192,4 +192,4 @@ if __name__ == '__main__':
     out_folder = os.path.join('figure-data')
     make_all_plots(in_folder, out_folder, ending='png')
     make_all_plots(in_folder, out_folder, ending='pdf')
-    # TODO Figure 2 & 3a: Talk to Nina
+
