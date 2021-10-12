@@ -270,7 +270,7 @@ def plot_policy_heatmap(df, policies_df, plan='Plan 1', plan_color=None, title='
         data = go.Heatmap(
             z=df[policies],
             x=df['Date'],
-            y=policies,
+            y=[policy.replace('_', ': ') for policy in policies],
             hovertemplate='%{x}<br>%{y}<br>Level=%{z}<extra></extra>',
             transpose=True,
             **settings
@@ -279,7 +279,7 @@ def plot_policy_heatmap(df, policies_df, plan='Plan 1', plan_color=None, title='
         data_max = go.Heatmap(
             z=[policies_df['Max'].values],
             x=['Max'],
-            y=policies,
+            y=[policy.replace('_', ': ') for policy in policies],
             hovertemplate='%{y}<br>Max level=%{z}<extra></extra>',
             transpose=True,
             **settings
