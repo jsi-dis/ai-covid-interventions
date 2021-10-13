@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from matplotlib.colors import to_rgba
+import plotly.colors as pc
 import warnings
 from visualize_plan import COLORS_DISCRETE, PLAIN_LAYOUT
 from datetime import datetime, timedelta
@@ -11,6 +11,20 @@ from datetime import datetime, timedelta
 LABEL_X = 'Time (number of days)'
 MARGIN_LEFT = 38
 MARGIN_DEFAULT = 80
+
+
+def get_rgba_color(color, alpha):
+    """
+    Returns the color in RGBA form rgba(R, G, B, A), where R, G, B are from [0, 255] and A is from
+    [0, 1].
+    """
+    if '#' in color:
+        rgb_255 = pc.hex_to_rgb(color)
+    elif 'rgb(' in color:
+        rgb_255 = pc.unlabel_rgb(color)
+    else:
+        rgb_255 = color
+    return 'rgba({}, {}, {}, {})'.format(rgb_255[0], rgb_255[1], rgb_255[2], alpha)
 
 
 def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict=None,
@@ -207,35 +221,41 @@ def plot_convergence(input_folder, output_folder, file_name, ending='png'):
     data_columns = [col for col in df.columns if ('stdev' not in col) and (col != 'x')]
     df_mean = df[['x'] + data_columns]
     df_mean = pd.melt(df_mean, id_vars=['x'], var_name='name', value_name='y')
-    title = 'Hypervolume values for different representations'
+    title = f'Hypervolume values for different {file_name.lower()}'
+    title += '<br><sup>Areas denote the mean +/- standard deviation</sup>'
     legend_dict = dict(yanchor='bottom', y=0, xanchor='right', x=1, title=file_name)
-    # Make the plot
+    # Plot mean values
+    colors = COLORS_DISCRETE
+    if 'Granularity' in file_name:
+        colors = px.colors.sequential.Plasma[::2][::-1]
     fig = plot_lines(df_mean, title=title, x_label='Number of evaluations', y_label='',
-                     legend_dict=legend_dict)
-    df_std = df
-    for col in data_columns:
-        df_std[f'{col} upper'] = df_std[col] + df_std[f'{col} stdev'].apply(lambda x: 0.5 * x)
-        df_std[f'{col} lower'] = df_std[col] - df_std[f'{col} stdev'].apply(lambda x: 0.5 * x)
+                     colors=colors, legend_dict=legend_dict)
+    used_colors = [data['line']['color'] for data in fig.data]
     # Add standard deviation
+    for col in data_columns:
+        df[f'{col} upper'] = df[col] + df[f'{col} stdev']
+        df[f'{col} lower'] = df[col] - df[f'{col} stdev']
     fig_stdev = go.Figure([
         go.Scatter(
             x=df['x'].tolist() + df['x'].tolist()[::-1],  # x, then x reversed
-            y=df_std[f'{col} upper'].tolist() + df_std[f'{col} lower'].tolist()[::-1],
-            fill='toself',
-            fillcolor=to_rgba(COLORS_DISCRETE[i], alpha=0.2),
+            y=df[f'{col} upper'].tolist() + df[f'{col} lower'].tolist()[::-1],
             # upper, then lower reversed
+            fill='toself',
+            line=dict(color='rgba(255,255,255,0)'),  # Transparent line
+            fillcolor=get_rgba_color(used_colors[i], alpha=0.2),
             showlegend=False
         )
         for i, col in enumerate(data_columns)
     ])
-    fig.add_trace(fig_stdev.data[0])
+    for i in range(len(data_columns)):
+        fig.add_trace(fig_stdev.data[i])
     fig.update_xaxes(type='log')
-    fig.for_each_trace(lambda t: t.update(name=t.name.split(",")[0]))
     fig.write_image(file_plot)
 
 
 def make_all_plots(input_folder, output_folder, ending='png'):
-    plot_convergence(input_folder, output_folder, 'Representation', ending)
+    plot_convergence(input_folder, output_folder, 'Granularity', ending)
+    plot_convergence(input_folder, output_folder, 'Representations', ending)
     return
     plot_error_distribution(input_folder, output_folder, ending)
     plot_prediction(input_folder, output_folder, 'Italy', ending)
@@ -254,6 +274,6 @@ if __name__ == '__main__':
     in_folder = os.path.join('figure-data')
     out_folder = os.path.join('figure-data')
     # remove_repeating_lines(os.path.join(in_folder, 'Granularity.csv'))
-    # remove_repeating_lines(os.path.join(in_folder, 'Representation.csv'))
+    # remove_repeating_lines(os.path.join(in_folder, 'Representations.csv'))
     make_all_plots(in_folder, out_folder, ending='png')
-    # make_all_plots(in_folder, out_folder, ending='pdf')
+    make_all_plots(in_folder, out_folder, ending='pdf')
