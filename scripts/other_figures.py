@@ -186,8 +186,17 @@ def plot_coefficients(input_folder, output_folder, ending):
 
 
 def remove_repeating_lines(file_name):
-    # TODO
-    pass
+    print(f'Removing repeated lines from {file_name}')
+    df = pd.read_csv(file_name, sep=',')
+    last = df.iloc[-1]
+    columns = df.columns.tolist()
+    columns.remove('x')
+    df.drop_duplicates(subset=columns, keep='first', inplace=True)
+    df = df.append(last)
+    if 'Granularity' in file_name:
+        df = df[['x', '1', '3', '7', '14', '30',
+                 '1 stdev', '3 stdev', '7 stdev', '14 stdev', '30 stdev']]
+    df.to_csv(file_name, sep=',', index=None)
 
 
 def plot_convergence(input_folder, output_folder, file_name, ending='png'):
@@ -244,5 +253,7 @@ def make_all_plots(input_folder, output_folder, ending='png'):
 if __name__ == '__main__':
     in_folder = os.path.join('figure-data')
     out_folder = os.path.join('figure-data')
+    # remove_repeating_lines(os.path.join(in_folder, 'Granularity.csv'))
+    # remove_repeating_lines(os.path.join(in_folder, 'Representation.csv'))
     make_all_plots(in_folder, out_folder, ending='png')
     # make_all_plots(in_folder, out_folder, ending='pdf')
