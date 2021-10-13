@@ -213,16 +213,18 @@ def remove_repeating_lines(file_name):
     df.to_csv(file_name, sep=',', index=None)
 
 
-def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_stdev=False):
+def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_stdev=True):
     file_data = os.path.join(input_folder, f'{file_name}.csv')
-    file_plot = os.path.join(output_folder, f'{file_name}.{ending}')
+    suffix = '_w_stdev' if plot_stdev else ''
+    file_plot = os.path.join(output_folder, f'{file_name}{suffix}.{ending}')
     # Read data
     df = pd.read_csv(file_data, sep=',')
     data_columns = [col for col in df.columns if ('stdev' not in col) and (col != 'x')]
     df_mean = df[['x'] + data_columns]
     df_mean = pd.melt(df_mean, id_vars=['x'], var_name='name', value_name='y')
     title = f'Hypervolume values for different {file_name.lower()}'
-    title += '<br><sup>Areas denote the mean +/- standard deviation</sup>'
+    if plot_stdev:
+        title += '<br><sup>Areas denote the mean +/- standard deviation</sup>'
     legend_dict = dict(yanchor='bottom', y=0, xanchor='right', x=1, title=file_name)
     # Plot mean values
     colors = COLORS_DISCRETE
@@ -255,8 +257,10 @@ def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_
 
 
 def make_all_plots(input_folder, output_folder, ending='png'):
-    plot_convergence(input_folder, output_folder, 'Granularity', ending)
-    plot_convergence(input_folder, output_folder, 'Representations', ending)
+    plot_convergence(input_folder, output_folder, 'Granularity', ending, plot_stdev=True)
+    plot_convergence(input_folder, output_folder, 'Representations', ending, plot_stdev=True)
+    plot_convergence(input_folder, output_folder, 'Granularity', ending, plot_stdev=False)
+    plot_convergence(input_folder, output_folder, 'Representations', ending, plot_stdev=False)
     plot_error_distribution(input_folder, output_folder, ending)
     plot_prediction(input_folder, output_folder, 'Italy', ending)
     plot_prediction(input_folder, output_folder, 'Norway', ending)
