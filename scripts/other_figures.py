@@ -50,6 +50,7 @@ def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict
         else:
             fig.update_layout(legend=dict(yanchor='top', y=1, xanchor='left', x=0, title=None))
         fig.update_layout(**PLAIN_LAYOUT)
+        fig.update_layout(title=dict(yanchor='top'))
         if layout_dict is not None:
             fig.update_layout(**layout_dict)
         return fig
@@ -69,6 +70,7 @@ def plot_error_distribution(input_folder, output_folder, ending='png'):
     fig = px.violin(df, x='Error', box=True, color_discrete_sequence=COLORS_DISCRETE, title=title,
                     labels={'Error': 'Relative error'},)
     fig.update_layout(**PLAIN_LAYOUT)
+    fig.update_layout(title=dict(yanchor='top'))
     fig.update_layout(margin=dict(l=MARGIN_LEFT, r=MARGIN_LEFT))
     fig.write_image(file_plot)
 
@@ -88,12 +90,7 @@ def plot_prediction(input_folder, output_folder, country, ending='png'):
     df = pd.melt(df, id_vars=['x'], var_name='name', value_name='y')
     title = f'New daily infections<br><sup>{country}</sup>'
     # Make the plot
-    colors = COLORS_DISCRETE
-    if country == 'Norway':
-        # Switch colors to ease differentiation
-        colors[2] = COLORS_DISCRETE[3]
-        colors[3] = COLORS_DISCRETE[2]
-    fig = plot_lines(df, title=title, x_label='', y_label='', colors=colors)
+    fig = plot_lines(df, title=title, x_label='', y_label='')
     if country == 'Norway':
         change_date = start_date + timedelta(days=40)
         fig.add_shape(
@@ -195,6 +192,7 @@ def plot_coefficients(input_folder, output_folder, ending):
     fig.update_layout(xaxis=dict(title=''),
                       yaxis=dict(title='', side='right', autorange='reversed'))
     fig.update_layout(**PLAIN_LAYOUT)
+    fig.update_layout(title=dict(yanchor='top'))
     fig.update_layout(margin=dict(r=0, b=0))
     fig.write_image(file_plot)
 
@@ -257,6 +255,7 @@ def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_
 
 
 def make_all_plots(input_folder, output_folder, ending='png'):
+    plot_npi_intensity(input_folder, output_folder, ending)
     plot_convergence(input_folder, output_folder, 'Granularity', ending, plot_stdev=True)
     plot_convergence(input_folder, output_folder, 'Representations', ending, plot_stdev=True)
     plot_convergence(input_folder, output_folder, 'Granularity', ending, plot_stdev=False)
@@ -269,7 +268,6 @@ def make_all_plots(input_folder, output_folder, ending='png'):
     plot_methods(input_folder, output_folder, 'Methods-b',
                  'Mean average error of HMLE classifiers', ending)
     plot_npi_costs(input_folder, output_folder, ending)
-    plot_npi_intensity(input_folder, output_folder, ending)
     plot_coefficients(input_folder, output_folder, ending)
 
 

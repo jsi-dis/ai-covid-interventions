@@ -30,6 +30,7 @@ PLAIN_LAYOUT = dict(
 
 # Set the color of the discrete traces
 COLORS_DISCRETE = px.colors.qualitative.Bold[:10]
+COLORS_DISCRETE[2], COLORS_DISCRETE[3] = COLORS_DISCRETE[3], COLORS_DISCRETE[2]
 COLORS_MAP = {'Plan {}'.format(i + 1): c for i, c in enumerate(COLORS_DISCRETE)}
 COLORS_MAP.update({
     'All min': '#919191',
