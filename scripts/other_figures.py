@@ -5,6 +5,7 @@ import plotly.graph_objects as go
 from matplotlib.colors import to_rgba
 import warnings
 from visualize_plan import COLORS_DISCRETE, PLAIN_LAYOUT
+from datetime import datetime, timedelta
 
 
 LABEL_X = 'Time (number of days)'
@@ -64,22 +65,29 @@ def plot_prediction(input_folder, output_folder, country, ending='png'):
     file_plot = os.path.join(output_folder, f'{file_name}.{ending}')
     # Read data
     df = pd.read_csv(file_data, sep=',')
+    # Add info about dates
+    start_date = datetime.strptime('2020-01-13', '%Y-%m-%d')
+    if country == 'Norway':
+        start_date = datetime.strptime('2020-08-16', '%Y-%m-%d')
+    df.drop(columns=['x'], inplace=True)
+    df['x'] = [start_date + timedelta(days=i) for i in range(len(df))]
     df = pd.melt(df, id_vars=['x'], var_name='name', value_name='y')
     title = f'New daily infections<br><sup>{country}</sup>'
     # Make the plot
     colors = COLORS_DISCRETE
     if country == 'Norway':
-        # Switch colors ease differentiation
+        # Switch colors to ease differentiation
         colors[2] = COLORS_DISCRETE[3]
         colors[3] = COLORS_DISCRETE[2]
-    fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='', colors=colors)
+    fig = plot_lines(df, title=title, x_label='', y_label='', colors=colors)
     if country == 'Norway':
+        change_date = start_date + timedelta(days=40)
         fig.add_shape(
             type='line',
-            x0=40, y0=0, x1=40, y1=900,
+            x0=change_date, y0=0, x1=change_date, y1=900,
             line=dict(color='gray', width=2))
         fig.add_annotation(
-            x=40, y=900,
+            x=change_date, y=900,
             xshift=5, yshift=-10,
             text='NPI change',
             showarrow=False,
@@ -91,7 +99,8 @@ def plot_prediction(input_folder, output_folder, country, ending='png'):
         file_name_splits = f'Prediction-Italy-splits'
         file_data_splits = os.path.join(input_folder, f'{file_name_splits}.csv')
         splits = pd.read_csv(file_data_splits, sep=',')['Splits with delay'].values
-        for i, split in enumerate(splits):
+        splits_dates = [start_date + timedelta(days=int(split)) for split in splits]
+        for i, split in enumerate(splits_dates):
             fig.add_traces([
                 go.Scatter(
                     x=[split] * 2,
@@ -237,4 +246,3 @@ if __name__ == '__main__':
     out_folder = os.path.join('figure-data')
     make_all_plots(in_folder, out_folder, ending='png')
     # make_all_plots(in_folder, out_folder, ending='pdf')
-
