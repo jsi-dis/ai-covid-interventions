@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+from matplotlib.colors import to_rgba
 import warnings
 from visualize_plan import COLORS_DISCRETE, PLAIN_LAYOUT
 
@@ -168,13 +169,56 @@ def plot_coefficients(input_folder, output_folder, ending):
                                 showarrow=False))
     fig.update_layout(annotations=annotations)
     # Adjust layout
-    fig.update_layout(xaxis=dict(title=''), yaxis=dict(title='', side='right', autorange='reversed'))
+    fig.update_layout(xaxis=dict(title=''),
+                      yaxis=dict(title='', side='right', autorange='reversed'))
     fig.update_layout(**PLAIN_LAYOUT)
     fig.update_layout(margin=dict(r=0, b=0))
     fig.write_image(file_plot)
 
 
+def remove_repeating_lines(file_name):
+    # TODO
+    pass
+
+
+def plot_convergence(input_folder, output_folder, file_name, ending='png'):
+    file_data = os.path.join(input_folder, f'{file_name}.csv')
+    file_plot = os.path.join(output_folder, f'{file_name}.{ending}')
+    # Read data
+    df = pd.read_csv(file_data, sep=',')
+    data_columns = [col for col in df.columns if ('stdev' not in col) and (col != 'x')]
+    df_mean = df[['x'] + data_columns]
+    df_mean = pd.melt(df_mean, id_vars=['x'], var_name='name', value_name='y')
+    title = 'Hypervolume values for different representations'
+    legend_dict = dict(yanchor='bottom', y=0, xanchor='right', x=1, title=file_name)
+    # Make the plot
+    fig = plot_lines(df_mean, title=title, x_label='Number of evaluations', y_label='',
+                     legend_dict=legend_dict)
+    df_std = df
+    for col in data_columns:
+        df_std[f'{col} upper'] = df_std[col] + df_std[f'{col} stdev'].apply(lambda x: 0.5 * x)
+        df_std[f'{col} lower'] = df_std[col] - df_std[f'{col} stdev'].apply(lambda x: 0.5 * x)
+    # Add standard deviation
+    fig_stdev = go.Figure([
+        go.Scatter(
+            x=df['x'].tolist() + df['x'].tolist()[::-1],  # x, then x reversed
+            y=df_std[f'{col} upper'].tolist() + df_std[f'{col} lower'].tolist()[::-1],
+            fill='toself',
+            fillcolor=to_rgba(COLORS_DISCRETE[i], alpha=0.2),
+            # upper, then lower reversed
+            showlegend=False
+        )
+        for i, col in enumerate(data_columns)
+    ])
+    fig.add_trace(fig_stdev.data[0])
+    fig.update_xaxes(type='log')
+    fig.for_each_trace(lambda t: t.update(name=t.name.split(",")[0]))
+    fig.write_image(file_plot)
+
+
 def make_all_plots(input_folder, output_folder, ending='png'):
+    plot_convergence(input_folder, output_folder, 'Representation', ending)
+    return
     plot_error_distribution(input_folder, output_folder, ending)
     plot_prediction(input_folder, output_folder, 'Italy', ending)
     plot_prediction(input_folder, output_folder, 'Norway', ending)
@@ -185,11 +229,12 @@ def make_all_plots(input_folder, output_folder, ending='png'):
     plot_npi_costs(input_folder, output_folder, ending)
     plot_npi_intensity(input_folder, output_folder, ending)
     plot_coefficients(input_folder, output_folder, ending)
+    plot_convergence(input_folder, output_folder, ending)
 
 
 if __name__ == '__main__':
     in_folder = os.path.join('figure-data')
     out_folder = os.path.join('figure-data')
     make_all_plots(in_folder, out_folder, ending='png')
-    make_all_plots(in_folder, out_folder, ending='pdf')
+    # make_all_plots(in_folder, out_folder, ending='pdf')
 
