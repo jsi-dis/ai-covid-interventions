@@ -213,7 +213,7 @@ def remove_repeating_lines(file_name):
     df.to_csv(file_name, sep=',', index=None)
 
 
-def plot_convergence(input_folder, output_folder, file_name, ending='png'):
+def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_stdev=False):
     file_data = os.path.join(input_folder, f'{file_name}.csv')
     file_plot = os.path.join(output_folder, f'{file_name}.{ending}')
     # Read data
@@ -230,25 +230,26 @@ def plot_convergence(input_folder, output_folder, file_name, ending='png'):
         colors = px.colors.sequential.Plasma[::2][::-1]
     fig = plot_lines(df_mean, title=title, x_label='Number of evaluations', y_label='',
                      colors=colors, legend_dict=legend_dict)
-    used_colors = [data['line']['color'] for data in fig.data]
-    # Add standard deviation
-    for col in data_columns:
-        df[f'{col} upper'] = df[col] + df[f'{col} stdev']
-        df[f'{col} lower'] = df[col] - df[f'{col} stdev']
-    fig_stdev = go.Figure([
-        go.Scatter(
-            x=df['x'].tolist() + df['x'].tolist()[::-1],  # x, then x reversed
-            y=df[f'{col} upper'].tolist() + df[f'{col} lower'].tolist()[::-1],
-            # upper, then lower reversed
-            fill='toself',
-            line=dict(color='rgba(255,255,255,0)'),  # Transparent line
-            fillcolor=get_rgba_color(used_colors[i], alpha=0.2),
-            showlegend=False
-        )
-        for i, col in enumerate(data_columns)
-    ])
-    for i in range(len(data_columns)):
-        fig.add_trace(fig_stdev.data[i])
+    if plot_stdev:
+        # Add standard deviation
+        used_colors = [data['line']['color'] for data in fig.data]
+        for col in data_columns:
+            df[f'{col} upper'] = df[col] + df[f'{col} stdev']
+            df[f'{col} lower'] = df[col] - df[f'{col} stdev']
+        fig_stdev = go.Figure([
+            go.Scatter(
+                x=df['x'].tolist() + df['x'].tolist()[::-1],  # x, then x reversed
+                y=df[f'{col} upper'].tolist() + df[f'{col} lower'].tolist()[::-1],
+                # upper, then lower reversed
+                fill='toself',
+                line=dict(color='rgba(255,255,255,0)'),  # Transparent line
+                fillcolor=get_rgba_color(used_colors[i], alpha=0.2),
+                showlegend=False
+            )
+            for i, col in enumerate(data_columns)
+        ])
+        for i in range(len(data_columns)):
+            fig.add_trace(fig_stdev.data[i])
     fig.update_xaxes(type='log')
     fig.write_image(file_plot)
 
@@ -256,7 +257,6 @@ def plot_convergence(input_folder, output_folder, file_name, ending='png'):
 def make_all_plots(input_folder, output_folder, ending='png'):
     plot_convergence(input_folder, output_folder, 'Granularity', ending)
     plot_convergence(input_folder, output_folder, 'Representations', ending)
-    return
     plot_error_distribution(input_folder, output_folder, ending)
     plot_prediction(input_folder, output_folder, 'Italy', ending)
     plot_prediction(input_folder, output_folder, 'Norway', ending)
@@ -267,7 +267,6 @@ def make_all_plots(input_folder, output_folder, ending='png'):
     plot_npi_costs(input_folder, output_folder, ending)
     plot_npi_intensity(input_folder, output_folder, ending)
     plot_coefficients(input_folder, output_folder, ending)
-    plot_convergence(input_folder, output_folder, ending)
 
 
 if __name__ == '__main__':
