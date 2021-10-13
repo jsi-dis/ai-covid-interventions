@@ -438,6 +438,10 @@ def plot_data(path_in, path_out, file_format='png'):
             fig = plot_policy_heatmap(
                 df, policies_df, plan=plan, prescription=PRESCRIPTION,
                 title='{}<br><sup>{}</sup>'.format(plan, title_info))
+            if info in selected_for_paper and info['start'] == '20201124' and (
+                    '9' in plan or '10' in plan):
+                info.update({'plan': re.sub(r"[^\w+]", '', plan.lower())})  # Remove spaces and bra
+                fig.write_image(file_name.replace('XXX', info['plan']).replace('png', 'pdf'))
             info.update({'plan': re.sub(r"[^\w+]", '', plan.lower())})  # Remove spaces and brackets
             fig.write_image(file_name.replace('XXX', info['plan']))
             info_df.loc[len(info_df)] = info
