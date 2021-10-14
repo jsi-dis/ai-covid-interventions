@@ -48,7 +48,7 @@ def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict
         if legend_dict is not None:
             fig.update_layout(legend=legend_dict)
         else:
-            fig.update_layout(legend=dict(yanchor='top', y=1, xanchor='left', x=0, title=None))
+            fig.update_layout(legend=dict(yanchor='top', y=1, xanchor='left', x=1e-2, title=None))
         fig.update_layout(**PLAIN_LAYOUT)
         fig.update_layout(title=dict(yanchor='top'))
         if layout_dict is not None:
@@ -149,7 +149,7 @@ def plot_npi_costs(input_folder, output_folder, ending='png'):
     legend_dict = dict(yanchor='top', y=1, xanchor='right', x=1, title=None)
     # Make the plot
     fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='', legend_dict=legend_dict)
-    fig.write_image(file_plot)
+    fig.write_image(file_plot, width=600)  # Default width = 700, height = 500
 
 
 def plot_npi_intensity(input_folder, output_folder, ending='png'):
@@ -167,7 +167,7 @@ def plot_npi_intensity(input_folder, output_folder, ending='png'):
     fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='', line_dash='line_dash',
                      legend_dict=legend_dict)
     fig.for_each_trace(lambda t: t.update(name=t.name.split(",")[0]))
-    fig.write_image(file_plot, width=900)  # Default width = 700, height = 500
+    fig.write_image(file_plot, width=800)  # Default width = 700, height = 500
 
 
 def plot_coefficients(input_folder, output_folder, ending):
@@ -223,7 +223,7 @@ def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_
     title = f'Hypervolume values for different {file_name.lower()}'
     if plot_stdev:
         title += '<br><sup>Areas denote the mean +/- standard deviation</sup>'
-    legend_dict = dict(yanchor='bottom', y=0, xanchor='right', x=1, title=file_name)
+    legend_dict = dict(yanchor='bottom', y=1e-2, xanchor='right', x=1, title=file_name)
     # Plot mean values
     colors = COLORS_DISCRETE
     if 'Granularity' in file_name:
