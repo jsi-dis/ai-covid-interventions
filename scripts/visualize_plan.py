@@ -294,6 +294,7 @@ def plot_policy_heatmap(df, policies_df, plan='Plan 1', plan_color=None, title='
         fig.update_yaxes(fixedrange=True, row=1, col=1)
         fig.update_xaxes(fixedrange=True, row=1, col=2)
         fig.update_yaxes(fixedrange=True, row=1, col=2)
+        fig.update_yaxes(ticksuffix=' ', row=1, col=1)
         fig.update_layout(yaxis=dict(autorange='reversed'))
         fig.update_layout(plot_bgcolor='white', title=title)
         fig.update_layout(**PLAIN_LAYOUT)

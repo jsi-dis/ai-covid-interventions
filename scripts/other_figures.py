@@ -4,6 +4,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import plotly.colors as pc
 import warnings
+import math
 from visualize_plan import COLORS_DISCRETE, PLAIN_LAYOUT
 from datetime import datetime, timedelta
 
@@ -27,8 +28,8 @@ def get_rgba_color(color, alpha):
     return 'rgba({}, {}, {}, {})'.format(rgb_255[0], rgb_255[1], rgb_255[2], alpha)
 
 
-def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict=None,
-               colors=COLORS_DISCRETE, layout_dict=None):
+def plot_lines(df, title='', x_label='', y_label='', range_x=None, range_y=None, line_dash=None,
+               legend_dict=None, colors=COLORS_DISCRETE, layout_dict=None):
     """Creates a line plot for the given data frame.
 
     The data frame (df) should have columns 'x', 'y' that contain the data for the lines and 'name',
@@ -42,6 +43,8 @@ def plot_lines(df, title='', x_label='', y_label='', line_dash=None, legend_dict
             color='name',
             line_dash=line_dash,
             color_discrete_sequence=colors,
+            range_x=range_x,
+            range_y=range_y,
             title=title,
         )
         fig.update_layout(xaxis=dict(title=x_label), yaxis=dict(title=y_label), showlegend=True)
@@ -249,7 +252,8 @@ def remove_repeating_lines(file_name):
     df = pd.read_csv(file_name, sep=',')
     last = df.iloc[-1]
     columns = df.columns.tolist()
-    columns.remove('x')
+    if 'x' in columns:
+        columns.remove('x')
     df.drop_duplicates(subset=columns, keep='first', inplace=True)
     df = df.append(last)
     if 'Granularity' in file_name:
@@ -258,9 +262,11 @@ def remove_repeating_lines(file_name):
     df.to_csv(file_name, sep=',', index=None)
 
 
-def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_stdev=True):
+def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_stdev=True,
+                     inset=False):
     file_data = os.path.join(input_folder, f'{file_name}.csv')
     suffix = '_w_stdev' if plot_stdev else ''
+    suffix += '_inset' if inset else ''
     file_plot = os.path.join(output_folder, f'{file_name}{suffix}.{ending}')
     # Read data
     df = pd.read_csv(file_data, sep=',')
@@ -271,12 +277,20 @@ def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_
     if plot_stdev:
         title += '<br><sup>Areas denote the mean +/- standard deviation</sup>'
     legend_dict = dict(yanchor='bottom', y=1e-2, xanchor='right', x=1, title=file_name)
-    # Plot mean values
+    range_y = None
     colors = COLORS_DISCRETE
+    x_label = 'Number of evaluations'
     if 'Granularity' in file_name:
         colors = px.colors.sequential.Plasma[::2][::-1]
-    fig = plot_lines(df_mean, title=title, x_label='Number of evaluations', y_label='',
-                     colors=colors, legend_dict=legend_dict)
+        range_y = [0.15, 0.65]
+        legend_dict = dict(yanchor='bottom', y=1e-2, xanchor='left', x=1e-2, title=file_name)
+    if inset:
+        # Remove title and axis labels
+        title = ''
+        x_label = ''
+    # Plot mean values
+    fig = plot_lines(df_mean, title=title, x_label=x_label, y_label='',
+                     range_y=range_y, colors=colors, legend_dict=legend_dict)
     if plot_stdev:
         # Add standard deviation
         used_colors = [data['line']['color'] for data in fig.data]
@@ -298,12 +312,21 @@ def plot_convergence(input_folder, output_folder, file_name, ending='png', plot_
         for i in range(len(data_columns)):
             fig.add_trace(fig_stdev.data[i])
     fig.update_xaxes(type='log')
-    fig.write_image(file_plot)
+    if inset:
+        # Remove legend
+        fig.update_traces(showlegend=False)
+        fig.update_layout(xaxis=dict(range=[math.log10(10000), math.log10(300000)]))
+        fig.update_layout(yaxis=dict(range=[0.59, 0.64], tickformat='.2f'))
+        fig.update_layout(margin=dict(b=0, t=20, l=0, r=20))
+        ratio = 0.4
+        fig.write_image(file_plot, width=700 * ratio, height=500 * ratio)
+    else:
+        fig.write_image(file_plot)
 
 
 def make_all_plots(input_folder, output_folder, ending='png'):
-    plot_npi_intensity(input_folder, output_folder, ending)
     plot_convergence(input_folder, output_folder, 'Granularity', ending, plot_stdev=True)
+    plot_convergence(input_folder, output_folder, 'Granularity', ending, plot_stdev=True, inset=True)
     plot_convergence(input_folder, output_folder, 'Representations', ending, plot_stdev=True)
     plot_convergence(input_folder, output_folder, 'Granularity', ending, plot_stdev=False)
     plot_convergence(input_folder, output_folder, 'Representations', ending, plot_stdev=False)
@@ -315,6 +338,7 @@ def make_all_plots(input_folder, output_folder, ending='png'):
     plot_methods(input_folder, output_folder, 'Methods-b',
                  'Mean average error of HMLE classifiers', ending)
     plot_npi_costs(input_folder, output_folder, ending)
+    plot_npi_intensity(input_folder, output_folder, ending)
     plot_coefficients(input_folder, output_folder, ending)
 
 
