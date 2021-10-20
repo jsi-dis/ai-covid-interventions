@@ -24,7 +24,7 @@ for (let i = 0; i < valuesCat.length; i++) {
   contentsCat += "<option value=\"" + valuesCat[i] + "\">" + namesCat[i] + "</option>";
 }
 selectCat.innerHTML = contentsCat;
-selectCat.options[4].selected = true;
+selectCat.options[3].selected = true;
 
 /* Fill the weights dropdown with values */
 var selectWei = document.getElementById("wei");
