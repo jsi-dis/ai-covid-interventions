@@ -148,6 +148,16 @@ def plot_methods(input_folder, output_folder, file_name, title, ending='png'):
         for x in [1, 2]:
             # fig.data[x]['line']['width'] = 1
             fig.data[x]['line']['dash'] = 'dash'
+    else:
+        # Use dashes to differentiate between traces
+        for x in range(len(fig.data)):
+            if x % 3 == 0:
+                dash = 'dot'
+            elif x % 3 == 1:
+                dash = 'dash'
+            else:
+                dash = 'solid'
+            fig.data[x]['line']['dash'] = dash
     fig.write_image(file_plot)
 
 
