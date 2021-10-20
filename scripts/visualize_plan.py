@@ -31,6 +31,8 @@ PLAIN_LAYOUT = dict(
 # Set the color of the discrete traces
 COLORS_DISCRETE = px.colors.qualitative.Bold[:10]
 COLORS_DISCRETE[2], COLORS_DISCRETE[3] = COLORS_DISCRETE[3], COLORS_DISCRETE[2]
+COLORS_DISCRETE[5], COLORS_DISCRETE[6], COLORS_DISCRETE[7] = \
+    COLORS_DISCRETE[7], COLORS_DISCRETE[5], COLORS_DISCRETE[6]
 COLORS_MAP = {'Plan {}'.format(i + 1): c for i, c in enumerate(COLORS_DISCRETE)}
 COLORS_MAP.update({
     'All min': '#919191',
@@ -236,6 +238,15 @@ def plot_objective_together(df, objective_col='Infections', objective_label='Inf
             hovertemplate='%{customdata}: %{y:,.2f}<extra></extra>' if hover_decimals else
             '%{customdata}: %{y:,.0f}<extra></extra>'
         ))
+        # Use dashes to differentiate between traces
+        for x in range(len(fig.data)):
+            if x % 3 == 0:
+                dash = 'dot'
+            elif x % 3 == 1:
+                dash = 'dash'
+            else:
+                dash = 'solid'
+            fig.data[x]['line']['dash'] = dash
         return fig
     except Exception as e:
         warnings.warn('Plot not produced due to error: {}'.format(e), RuntimeWarning)
