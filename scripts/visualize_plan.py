@@ -329,13 +329,15 @@ def plot_data(path_in, path_out, file_format='png'):
     Returns a DataFrame containing information about this data.
     """
     selected_for_paper = [
+        # Figure 6, left
         {
             'country': 'Italy',
-            'category': 'm1',
+            'category': 'm2',
             'weights': 'gdp',
             'granularity': '14',
-            'start': '20210129'
+            'start': '20201209'
         },
+        # Figure 6, right
         {
             'country': 'France',
             'category': 'm2',
@@ -343,6 +345,7 @@ def plot_data(path_in, path_out, file_format='png'):
             'granularity': '14',
             'start': '20201124'
         },
+        # Supplementary
         {
             'country': 'France',
             'category': '2',
@@ -350,6 +353,7 @@ def plot_data(path_in, path_out, file_format='png'):
             'granularity': '14',
             'start': '20201026'
         },
+        # Supplementary
         {
             'country': 'Brazil',
             'category': '1',
@@ -357,6 +361,7 @@ def plot_data(path_in, path_out, file_format='png'):
             'granularity': '14',
             'start': '20201208'
         },
+        # Supplementary
         {
             'country': 'Israel',
             'category': '0',
@@ -364,6 +369,7 @@ def plot_data(path_in, path_out, file_format='png'):
             'granularity': '14',
             'start': '20201119'
         },
+        # Supplementary
         {
             'country': 'Argentina',
             'category': 'm1',
@@ -371,6 +377,7 @@ def plot_data(path_in, path_out, file_format='png'):
             'granularity': '14',
             'start': '20201110'
         },
+        # Supplementary
         {
             'country': 'Hungary',
             'category': 'm2',
@@ -378,6 +385,24 @@ def plot_data(path_in, path_out, file_format='png'):
             'granularity': '14',
             'start': '20201225'
         }
+    ]
+    selected_plans = [
+        {
+            'country': 'France',
+            'category': 'm2',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20201124',
+            'plan': 'plan2'
+        },
+        {
+            'country': 'France',
+            'category': 'm2',
+            'weights': 'combined',
+            'granularity': '14',
+            'start': '20201124',
+            'plan': 'plan7'
+        },
     ]
     info_df = pd.DataFrame(
         columns=['country', 'category', 'weights', 'start', 'plan', 'granularity'])
@@ -450,11 +475,10 @@ def plot_data(path_in, path_out, file_format='png'):
             fig = plot_policy_heatmap(
                 df, policies_df, plan=plan, prescription=PRESCRIPTION,
                 title='{}<br><sup>{}</sup>'.format(plan, title_info))
-            if info in selected_for_paper and info['start'] == '20201124' and (
-                    '9' in plan or '10' in plan):
-                info.update({'plan': re.sub(r"[^\w+]", '', plan.lower())})  # Remove spaces and bra
-                fig.write_image(file_name.replace('XXX', info['plan']).replace('png', 'pdf'))
             info.update({'plan': re.sub(r"[^\w+]", '', plan.lower())})  # Remove spaces and brackets
+            if info in selected_plans:
+                # Make pdfs for the paper
+                fig.write_image(file_name.replace('XXX', info['plan']).replace('png', 'pdf'))
             fig.write_image(file_name.replace('XXX', info['plan']))
             info_df.loc[len(info_df)] = info
     return info_df
