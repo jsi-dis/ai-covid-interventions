@@ -24,6 +24,7 @@ for (let i = 0; i < valuesCat.length; i++) {
   contentsCat += "<option value=\"" + valuesCat[i] + "\">" + namesCat[i] + "</option>";
 }
 selectCat.innerHTML = contentsCat;
+selectCat.options[4].selected = true;
 
 /* Fill the weights dropdown with values */
 var selectWei = document.getElementById("wei");
@@ -34,6 +35,7 @@ for (let i = 0; i < valuesWei.length; i++) {
   contentsWei += "<option value=\"" + valuesWei[i] + "\">" + namesWei[i] + "</option>";
 }
 selectWei.innerHTML = contentsWei;
+selectWei.options[2].selected = true;
 
 /* Fill the category dropdown with values */
 var selectGra = document.getElementById("gra");
@@ -43,6 +45,7 @@ for (let i = 0; i < valuesGra.length; i++) {
   contentsGra += "<option>" + valuesGra[i] + "</option>";
 }
 selectGra.innerHTML = contentsGra;
+selectGra.options[1].selected = true;
 
 /* Fill the visualization dropdown with values */
 var selectViz = document.getElementById("viz");
