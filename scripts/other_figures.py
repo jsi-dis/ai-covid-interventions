@@ -174,21 +174,23 @@ def plot_npi_intensity(input_folder, output_folder, ending='png'):
     df = pd.melt(df, id_vars=['x'], var_name='name', value_name='y')
     df['line_dash'] = 'solid'
     df.loc[df['name'].str.startswith('H'), 'line_dash'] = 'dash'
+    colors = px.colors.qualitative.Bold[:10]
+    colors[2], colors[3] = colors[3], colors[2]
     title = 'NPI intensity'
     legend_dict = dict(title='')
     # Make the plot
     fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='', line_dash='line_dash',
-                     legend_dict=legend_dict)
+                     legend_dict=legend_dict, colors=colors)
     fig.for_each_trace(lambda t: t.update(name=t.name.split(",")[0]))
     # Add labels
     labels = [
-        {'x': 60, 'y': 0.71, 'text': 'C1', 'color': COLORS_DISCRETE[0]},
-        {'x': 60, 'y': 0.52, 'text': 'C5', 'color': COLORS_DISCRETE[4]},
-        {'x': 60, 'y': 0.43, 'text': 'C4', 'color': COLORS_DISCRETE[3]},
-        {'x': 60, 'y': 0.32, 'text': 'C2', 'color': COLORS_DISCRETE[1]},
-        {'x': 60, 'y': 0.25, 'text': 'C6', 'color': COLORS_DISCRETE[5]},
-        {'x': 4,  'y': 0.56, 'text': 'H6', 'color': COLORS_DISCRETE[1]},
-        {'x': 60, 'y': 0.15, 'text': 'C7', 'color': COLORS_DISCRETE[6]},
+        {'x': 60, 'y': 0.71, 'text': 'C1', 'color': colors[0]},
+        {'x': 60, 'y': 0.52, 'text': 'C5', 'color': colors[4]},
+        {'x': 60, 'y': 0.43, 'text': 'C4', 'color': colors[3]},
+        {'x': 60, 'y': 0.32, 'text': 'C2', 'color': colors[1]},
+        {'x': 60, 'y': 0.25, 'text': 'C6', 'color': colors[5]},
+        {'x': 4,  'y': 0.56, 'text': 'H6', 'color': colors[1]},
+        {'x': 60, 'y': 0.15, 'text': 'C7', 'color': colors[6]},
     ]
     for label in labels:
         fig.add_annotation(
@@ -200,11 +202,11 @@ def plot_npi_intensity(input_folder, output_folder, ending='png'):
             font=dict(color=label['color']))
     # Add labels with lines (C3, H2, H3)
     labels = [
-        {'x': 53, 'y': 0.965, 'ay': -20, 'text': 'H1', 'color': COLORS_DISCRETE[8]},
-        {'x': 59, 'y': 0.955,  'ay': -23, 'text': 'C3', 'color': COLORS_DISCRETE[2]},
-        {'x': 45, 'y': 0.935, 'ay': 25, 'text': 'H2', 'color': COLORS_DISCRETE[9]},
-        {'x': 53, 'y': 0.925, 'ay': 21, 'text': 'H3', 'color': COLORS_DISCRETE[0]},
-        {'x': 59, 'y': 0.92,  'ay': 20, 'text': 'C8', 'color': COLORS_DISCRETE[7]},
+        {'x': 53, 'y': 0.965, 'ay': -20, 'text': 'H1', 'color': colors[8]},
+        {'x': 59, 'y': 0.955,  'ay': -23, 'text': 'C3', 'color': colors[2]},
+        {'x': 45, 'y': 0.935, 'ay': 25, 'text': 'H2', 'color': colors[9]},
+        {'x': 53, 'y': 0.925, 'ay': 21, 'text': 'H3', 'color': colors[0]},
+        {'x': 59, 'y': 0.92,  'ay': 20, 'text': 'C8', 'color': colors[7]},
     ]
     for label in labels:
         fig.add_annotation(
