@@ -91,11 +91,18 @@ def plot_prediction(input_folder, output_folder, country, ending='png'):
     df.drop(columns=['x'], inplace=True)
     df['x'] = [start_date + timedelta(days=i) for i in range(len(df))]
     df = pd.melt(df, id_vars=['x'], var_name='name', value_name='y')
-    title = f'New daily infections<br><sup>{country}</sup>'
+    if country == 'Italy':
+        title = 'SEIRD model fit to historical data<br><sup>New daily infections for Italy</sup>'
+    else:
+        title = 'Predicting future infection numbers depending on NPI change<br><sup>New daily ' \
+                'infections for Norway</sup>'
     # Make the plot
     fig = plot_lines(df, title=title, x_label='', y_label='')
     if country == 'Norway':
-        change_date = start_date + timedelta(days=40)
+        # Make status-quo predictions dashed
+        fig.data[1]['line']['dash'] = 'dash'
+        # Add NPI change line
+        change_date = start_date + timedelta(days=47)
         fig.add_shape(
             type='line',
             x0=change_date, y0=0, x1=change_date, y1=900,
@@ -140,7 +147,7 @@ def plot_methods(input_folder, output_folder, file_name, title, ending='png'):
     # Read data
     df = pd.read_csv(file_data, sep=',')
     df = pd.melt(df, id_vars=['x'], var_name='name', value_name='y')
-    title = f'{title}<br><sup>Predicted daily infections normalized by population</sup>'
+    title = f'{title}<br><sup>Predicted daily infections per 100.000 people</sup>'
     # Make the plot
     fig = plot_lines(df, title=title, x_label=LABEL_X, y_label='')
     # Try to distinguish better HMLE from the other lines
