@@ -68,12 +68,18 @@ def plot_error_distribution(input_folder, output_folder, ending='png'):
     file_plot = os.path.join(output_folder, f'{file_name}.{ending}')
     # Read data
     df = pd.read_csv(file_data, sep=',')
-    title = 'Relative error distribution for the fitted SEIRD model'
+    title = 'Mean average error distribution for the fitted SEIRD model'
     # Make the plot
-    fig = px.violin(df, x='Error', box=True, color_discrete_sequence=COLORS_DISCRETE, title=title,
-                    labels={'Error': 'Relative error'},)
+    fig = go.Figure()
+    fig.add_trace(go.Violin(
+        x=df['Error'],
+        name='',
+        box_visible=True,
+        spanmode='hard',
+        line_color=COLORS_DISCRETE[0]))
+    fig.update_xaxes(title='Mean average error per 100.000 people')
     fig.update_layout(**PLAIN_LAYOUT)
-    fig.update_layout(title=dict(yanchor='top'))
+    fig.update_layout(title=dict(text=title, yanchor='top'))
     fig.update_layout(margin=dict(l=MARGIN_LEFT, r=MARGIN_LEFT))
     fig.write_image(file_plot)
 
